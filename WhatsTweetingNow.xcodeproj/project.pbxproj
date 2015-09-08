@@ -7,13 +7,22 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A28A06ED1B9F822C00751000 /* LocationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A28A06EC1B9F822C00751000 /* LocationViewController.m */; };
 		A2E17DE51B99FD9200962213 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = A2E17DE41B99FD9200962213 /* main.m */; };
 		A2E17DE81B99FD9200962213 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A2E17DE71B99FD9200962213 /* AppDelegate.m */; };
-		A2E17DEB1B99FD9200962213 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A2E17DEA1B99FD9200962213 /* ViewController.m */; };
+		A2E17DEB1B99FD9200962213 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A2E17DEA1B99FD9200962213 /* LoginViewController.m */; };
 		A2E17DEE1B99FD9200962213 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A2E17DEC1B99FD9200962213 /* Main.storyboard */; };
 		A2E17DF01B99FD9200962213 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A2E17DEF1B99FD9200962213 /* Images.xcassets */; };
 		A2E17DF31B99FD9200962213 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = A2E17DF11B99FD9200962213 /* LaunchScreen.xib */; };
 		A2E17DFF1B99FD9200962213 /* WhatsTweetingNowTests.m in Sources */ = {isa = PBXBuildFile; fileRef = A2E17DFE1B99FD9200962213 /* WhatsTweetingNowTests.m */; };
+		A2E17E0D1B99FE4000962213 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2E17E091B99FE4000962213 /* Fabric.framework */; };
+		A2E17E0E1B99FE4000962213 /* TwitterKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2E17E0A1B99FE4000962213 /* TwitterKit.framework */; };
+		A2E17E0F1B99FE4000962213 /* TwitterKitResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = A2E17E0B1B99FE4000962213 /* TwitterKitResources.bundle */; };
+		A2E17E101B99FE4000962213 /* TwitterCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2E17E0C1B99FE4000962213 /* TwitterCore.framework */; };
+		A2E17E151B9A2C0600962213 /* TrendingTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A2E17E141B9A2C0600962213 /* TrendingTableViewController.m */; };
+		A2E17E191B9A435F00962213 /* SMXMLDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = A2E17E171B9A435F00962213 /* SMXMLDocument.m */; };
+		A2E17E1A1B9A435F00962213 /* SMXMLDocument.podspec in Resources */ = {isa = PBXBuildFile; fileRef = A2E17E181B9A435F00962213 /* SMXMLDocument.podspec */; };
+		A2E17E1D1B9F350400962213 /* Trend.m in Sources */ = {isa = PBXBuildFile; fileRef = A2E17E1C1B9F350400962213 /* Trend.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -27,19 +36,32 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		A28A06EB1B9F822C00751000 /* LocationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocationViewController.h; sourceTree = "<group>"; };
+		A28A06EC1B9F822C00751000 /* LocationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocationViewController.m; sourceTree = "<group>"; };
 		A2E17DDF1B99FD9200962213 /* WhatsTweetingNow.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WhatsTweetingNow.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A2E17DE31B99FD9200962213 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A2E17DE41B99FD9200962213 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		A2E17DE61B99FD9200962213 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		A2E17DE71B99FD9200962213 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		A2E17DE91B99FD9200962213 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		A2E17DEA1B99FD9200962213 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		A2E17DE91B99FD9200962213 /* LoginViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
+		A2E17DEA1B99FD9200962213 /* LoginViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
 		A2E17DED1B99FD9200962213 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		A2E17DEF1B99FD9200962213 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		A2E17DF21B99FD9200962213 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		A2E17DF81B99FD9200962213 /* WhatsTweetingNowTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WhatsTweetingNowTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A2E17DFD1B99FD9200962213 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A2E17DFE1B99FD9200962213 /* WhatsTweetingNowTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WhatsTweetingNowTests.m; sourceTree = "<group>"; };
+		A2E17E091B99FE4000962213 /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
+		A2E17E0A1B99FE4000962213 /* TwitterKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = TwitterKit.framework; sourceTree = "<group>"; };
+		A2E17E0B1B99FE4000962213 /* TwitterKitResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = TwitterKitResources.bundle; path = TwitterKit.framework/Versions/A/Resources/TwitterKitResources.bundle; sourceTree = "<group>"; };
+		A2E17E0C1B99FE4000962213 /* TwitterCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = TwitterCore.framework; sourceTree = "<group>"; };
+		A2E17E131B9A2C0600962213 /* TrendingTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrendingTableViewController.h; sourceTree = "<group>"; };
+		A2E17E141B9A2C0600962213 /* TrendingTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TrendingTableViewController.m; sourceTree = "<group>"; };
+		A2E17E161B9A435F00962213 /* SMXMLDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMXMLDocument.h; sourceTree = "<group>"; };
+		A2E17E171B9A435F00962213 /* SMXMLDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMXMLDocument.m; sourceTree = "<group>"; };
+		A2E17E181B9A435F00962213 /* SMXMLDocument.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SMXMLDocument.podspec; sourceTree = "<group>"; };
+		A2E17E1B1B9F350400962213 /* Trend.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Trend.h; sourceTree = "<group>"; };
+		A2E17E1C1B9F350400962213 /* Trend.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Trend.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -47,6 +69,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A2E17E0D1B99FE4000962213 /* Fabric.framework in Frameworks */,
+				A2E17E101B99FE4000962213 /* TwitterCore.framework in Frameworks */,
+				A2E17E0E1B99FE4000962213 /* TwitterKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -63,6 +88,10 @@
 		A2E17DD61B99FD9200962213 = {
 			isa = PBXGroup;
 			children = (
+				A2E17E091B99FE4000962213 /* Fabric.framework */,
+				A2E17E0A1B99FE4000962213 /* TwitterKit.framework */,
+				A2E17E0B1B99FE4000962213 /* TwitterKitResources.bundle */,
+				A2E17E0C1B99FE4000962213 /* TwitterCore.framework */,
 				A2E17DE11B99FD9200962213 /* WhatsTweetingNow */,
 				A2E17DFB1B99FD9200962213 /* WhatsTweetingNowTests */,
 				A2E17DE01B99FD9200962213 /* Products */,
@@ -81,13 +110,22 @@
 		A2E17DE11B99FD9200962213 /* WhatsTweetingNow */ = {
 			isa = PBXGroup;
 			children = (
+				A2E17E161B9A435F00962213 /* SMXMLDocument.h */,
+				A2E17E171B9A435F00962213 /* SMXMLDocument.m */,
+				A2E17E181B9A435F00962213 /* SMXMLDocument.podspec */,
 				A2E17DE61B99FD9200962213 /* AppDelegate.h */,
 				A2E17DE71B99FD9200962213 /* AppDelegate.m */,
-				A2E17DE91B99FD9200962213 /* ViewController.h */,
-				A2E17DEA1B99FD9200962213 /* ViewController.m */,
+				A2E17DE91B99FD9200962213 /* LoginViewController.h */,
+				A2E17DEA1B99FD9200962213 /* LoginViewController.m */,
 				A2E17DEC1B99FD9200962213 /* Main.storyboard */,
+				A2E17E131B9A2C0600962213 /* TrendingTableViewController.h */,
+				A2E17E141B9A2C0600962213 /* TrendingTableViewController.m */,
+				A28A06EB1B9F822C00751000 /* LocationViewController.h */,
+				A28A06EC1B9F822C00751000 /* LocationViewController.m */,
 				A2E17DEF1B99FD9200962213 /* Images.xcassets */,
 				A2E17DF11B99FD9200962213 /* LaunchScreen.xib */,
+				A2E17E1B1B9F350400962213 /* Trend.h */,
+				A2E17E1C1B9F350400962213 /* Trend.m */,
 				A2E17DE21B99FD9200962213 /* Supporting Files */,
 			);
 			path = WhatsTweetingNow;
@@ -129,6 +167,8 @@
 				A2E17DDB1B99FD9200962213 /* Sources */,
 				A2E17DDC1B99FD9200962213 /* Frameworks */,
 				A2E17DDD1B99FD9200962213 /* Resources */,
+				A2E17E081B99FDFF00962213 /* ShellScript */,
+				A2E17E111B9A091300962213 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -199,6 +239,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A2E17E1A1B9A435F00962213 /* SMXMLDocument.podspec in Resources */,
+				A2E17E0F1B99FE4000962213 /* TwitterKitResources.bundle in Resources */,
 				A2E17DEE1B99FD9200962213 /* Main.storyboard in Resources */,
 				A2E17DF31B99FD9200962213 /* LaunchScreen.xib in Resources */,
 				A2E17DF01B99FD9200962213 /* Images.xcassets in Resources */,
@@ -214,14 +256,47 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		A2E17E081B99FDFF00962213 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "./Fabric.framework/run 01dde5067697dd07f4386afece2b69ee4c7d196a d4f6669ca43f4f9a20f9bf367f785817ebdebf460a30a6aa505a7a4287313476";
+		};
+		A2E17E111B9A091300962213 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		A2E17DDB1B99FD9200962213 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A2E17DEB1B99FD9200962213 /* ViewController.m in Sources */,
+				A2E17DEB1B99FD9200962213 /* LoginViewController.m in Sources */,
 				A2E17DE81B99FD9200962213 /* AppDelegate.m in Sources */,
+				A28A06ED1B9F822C00751000 /* LocationViewController.m in Sources */,
+				A2E17E151B9A2C0600962213 /* TrendingTableViewController.m in Sources */,
+				A2E17E1D1B9F350400962213 /* Trend.m in Sources */,
 				A2E17DE51B99FD9200962213 /* main.m in Sources */,
+				A2E17E191B9A435F00962213 /* SMXMLDocument.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -348,7 +423,11 @@
 		A2E17E031B99FD9200962213 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				INFOPLIST_FILE = WhatsTweetingNow/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -358,7 +437,11 @@
 		A2E17E041B99FD9200962213 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				INFOPLIST_FILE = WhatsTweetingNow/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -418,6 +501,7 @@
 				A2E17E041B99FD9200962213 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		A2E17E051B99FD9200962213 /* Build configuration list for PBXNativeTarget "WhatsTweetingNowTests" */ = {
 			isa = XCConfigurationList;
@@ -426,6 +510,7 @@
 				A2E17E071B99FD9200962213 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

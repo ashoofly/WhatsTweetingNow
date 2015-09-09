@@ -10,6 +10,8 @@
 #import <TwitterKit/TwitterKit.h>
 #import "SMXMLDocument.h"
 #import "Trend.h"
+#import "APIKeys.h"
+#import "SearchViewController.h"
 
 typedef NS_ENUM(NSInteger, Geography) {
     LOCAL,
@@ -52,7 +54,7 @@ typedef NS_ENUM(NSInteger, Geography) {
 
 - (void)getWOEID {
     self.localLocation = @"Austin";
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://where.yahooapis.com/v1/places.q('%@')?appid=dj0yJmk9TFk4cmNzVklhS01jJmQ9WVdrOWNqRkxObGRSTjJzbWNHbzlNQS0tJnM9Y29uc3VtZXJzZWNyZXQmeD1iYw--&redirect_uri=oob&response_type=code&language=en-us", self.localLocation]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://where.yahooapis.com/v1/places.q('%@')?appid=%@", self.localLocation, YahooAPIKey]];
     NSURLRequest *request = [NSURLRequest requestWithURL:url];
     [NSURLConnection sendAsynchronousRequest:request
                                        queue:[NSOperationQueue mainQueue]
@@ -65,10 +67,15 @@ typedef NS_ENUM(NSInteger, Geography) {
              SMXMLDocument *places = [SMXMLDocument documentWithData:data error:&error];
              SMXMLElement *place = [[places childrenNamed:@"place"] firstObject];
              SMXMLElement *country = [[place childrenNamed:@"country"] firstObject];
+             SMXMLElement *centroid = [place childNamed:@"centroid"];
              self.localWOEID = [place valueWithPath:@"woeid"];
              self.countryWOEID =[country attributeNamed:@"woeid"];
              self.countryLocation = [place valueWithPath:@"country"];
+             self.localLatitude = [centroid valueWithPath:@"latitude"];
+             self.localLongitude = [centroid valueWithPath:@"longitude"];
+             
              [self fetchAllTrends];
+             
          } else {
              NSLog(@"%@", connectionError);
          }
@@ -179,6 +186,55 @@ typedef NS_ENUM(NSInteger, Geography) {
     cell.textLabel.text = ((Trend *)[[self.allTrends objectAtIndex:indexPath.section] objectAtIndex:indexPath.row]).name;
     NSLog(@"%@", cell.textLabel.text);
     return cell;
+}
+
+
+- (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"twitter://"]]) {
+        NSLog(@"opening native twitter app");
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"twitter://search?q=Apple%20near%3AAustin%20within%3A100mi&src=typd"]];
+        
+    } else {
+        NSLog(@"No native twitter app");
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://twitter.com/search?q=Apple%20near%3AAustin%20within%3A100mi&src=typd"]];
+        
+    }
+}
+
+- (void)prepareSearchViewController:(SearchViewController *)search withTerm:(NSString *)keyword
+{
+    
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    
+    if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"twitter://"]]) {
+        NSLog(@"opening native twitter app");
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"twitter://search?query=Apple%20near%3AAustin%20within%3A100mi&src=typd"]];
+
+    } else {
+        NSLog(@"No native twitter app");
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://twitter.com/search?q=Apple%20near%3AAustin%20within%3A100mi&src=typd"]];
+
+    }
+
+//    if ([sender isKindOfClass:[UITableViewCell class]]) {
+//        NSIndexPath *indexPath = [self.tableView indexPathForCell:sender];
+//        SearchViewController *dest = [segue destinationViewController];
+//        NSString *query = ((UITableViewCell *)sender).textLabel.text;
+//        if (indexPath.section==0)
+//            dest.searchTerm = [NSString stringWithFormat:@"%@ near:%@ within:100mi", query, self.localLocation];
+//        else if (indexPath.section==1)
+//            dest.searchTerm = [NSString stringWithFormat:@"%@ near:%@", query, self.countryLocation];
+//        else
+//            dest.searchTerm = query;
+//    }
+    
+    
+    
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
 }
 
 @end

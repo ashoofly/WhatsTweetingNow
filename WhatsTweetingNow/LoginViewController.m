@@ -28,7 +28,7 @@
     }];
     logInButton.center = self.view.center;
     [self.view addSubview:logInButton];
-    [self testRequest];
+    //[self testRequest];
     //[self getWOEID];
 }
 

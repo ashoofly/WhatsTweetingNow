@@ -9,6 +9,7 @@
 #import "AppDelegate.h"
 #import <Fabric/Fabric.h>
 #import <TwitterKit/TwitterKit.h>
+#import "APIKeys.h"
 
 @interface AppDelegate ()
 
@@ -18,7 +19,7 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    //[[Twitter sharedInstance] startWithConsumerKey:@"pSr7qbOyCvOJe0ocZoss50OrD" consumerSecret:@"jWfVF02w6mHx4tsebKcI4MzWTYop9d1fZdxVPPkHwR84sH8Byu"];
+    //[[Twitter sharedInstance] startWithConsumerKey:TwitterConsumerKey consumerSecret:TwitterConsumerSecret];
     [Fabric with:@[[Twitter class]]];
     return YES;
 }

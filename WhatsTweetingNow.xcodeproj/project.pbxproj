@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		A28A06ED1B9F822C00751000 /* LocationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A28A06EC1B9F822C00751000 /* LocationViewController.m */; };
+		A28A06F11BA0874100751000 /* SearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A28A06F01BA0874100751000 /* SearchViewController.m */; };
 		A2E17DE51B99FD9200962213 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = A2E17DE41B99FD9200962213 /* main.m */; };
 		A2E17DE81B99FD9200962213 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A2E17DE71B99FD9200962213 /* AppDelegate.m */; };
 		A2E17DEB1B99FD9200962213 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A2E17DEA1B99FD9200962213 /* LoginViewController.m */; };
@@ -38,6 +39,9 @@
 /* Begin PBXFileReference section */
 		A28A06EB1B9F822C00751000 /* LocationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocationViewController.h; sourceTree = "<group>"; };
 		A28A06EC1B9F822C00751000 /* LocationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocationViewController.m; sourceTree = "<group>"; };
+		A28A06EE1BA0829600751000 /* APIKeys.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = APIKeys.h; sourceTree = "<group>"; };
+		A28A06EF1BA0874100751000 /* SearchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchViewController.h; sourceTree = "<group>"; };
+		A28A06F01BA0874100751000 /* SearchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchViewController.m; sourceTree = "<group>"; };
 		A2E17DDF1B99FD9200962213 /* WhatsTweetingNow.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WhatsTweetingNow.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A2E17DE31B99FD9200962213 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A2E17DE41B99FD9200962213 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -110,22 +114,20 @@
 		A2E17DE11B99FD9200962213 /* WhatsTweetingNow */ = {
 			isa = PBXGroup;
 			children = (
-				A2E17E161B9A435F00962213 /* SMXMLDocument.h */,
-				A2E17E171B9A435F00962213 /* SMXMLDocument.m */,
-				A2E17E181B9A435F00962213 /* SMXMLDocument.podspec */,
+				A28A06EE1BA0829600751000 /* APIKeys.h */,
 				A2E17DE61B99FD9200962213 /* AppDelegate.h */,
 				A2E17DE71B99FD9200962213 /* AppDelegate.m */,
-				A2E17DE91B99FD9200962213 /* LoginViewController.h */,
-				A2E17DEA1B99FD9200962213 /* LoginViewController.m */,
-				A2E17DEC1B99FD9200962213 /* Main.storyboard */,
-				A2E17E131B9A2C0600962213 /* TrendingTableViewController.h */,
-				A2E17E141B9A2C0600962213 /* TrendingTableViewController.m */,
 				A28A06EB1B9F822C00751000 /* LocationViewController.h */,
 				A28A06EC1B9F822C00751000 /* LocationViewController.m */,
-				A2E17DEF1B99FD9200962213 /* Images.xcassets */,
-				A2E17DF11B99FD9200962213 /* LaunchScreen.xib */,
+				A2E17DEC1B99FD9200962213 /* Main.storyboard */,
+				A28A06EF1BA0874100751000 /* SearchViewController.h */,
+				A28A06F01BA0874100751000 /* SearchViewController.m */,
+				A2E17E161B9A435F00962213 /* SMXMLDocument.h */,
+				A2E17E171B9A435F00962213 /* SMXMLDocument.m */,
 				A2E17E1B1B9F350400962213 /* Trend.h */,
 				A2E17E1C1B9F350400962213 /* Trend.m */,
+				A2E17E131B9A2C0600962213 /* TrendingTableViewController.h */,
+				A2E17E141B9A2C0600962213 /* TrendingTableViewController.m */,
 				A2E17DE21B99FD9200962213 /* Supporting Files */,
 			);
 			path = WhatsTweetingNow;
@@ -134,6 +136,11 @@
 		A2E17DE21B99FD9200962213 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				A2E17E181B9A435F00962213 /* SMXMLDocument.podspec */,
+				A2E17DEF1B99FD9200962213 /* Images.xcassets */,
+				A2E17DF11B99FD9200962213 /* LaunchScreen.xib */,
+				A2E17DE91B99FD9200962213 /* LoginViewController.h */,
+				A2E17DEA1B99FD9200962213 /* LoginViewController.m */,
 				A2E17DE31B99FD9200962213 /* Info.plist */,
 				A2E17DE41B99FD9200962213 /* main.m */,
 			);
@@ -208,6 +215,7 @@
 				TargetAttributes = {
 					A2E17DDE1B99FD9200962213 = {
 						CreatedOnToolsVersion = 6.4;
+						DevelopmentTeam = X88CK326SX;
 					};
 					A2E17DF71B99FD9200962213 = {
 						CreatedOnToolsVersion = 6.4;
@@ -296,6 +304,7 @@
 				A2E17E151B9A2C0600962213 /* TrendingTableViewController.m in Sources */,
 				A2E17E1D1B9F350400962213 /* Trend.m in Sources */,
 				A2E17DE51B99FD9200962213 /* main.m in Sources */,
+				A28A06F11BA0874100751000 /* SearchViewController.m in Sources */,
 				A2E17E191B9A435F00962213 /* SMXMLDocument.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -424,6 +433,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -438,6 +448,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",

@@ -11,7 +11,8 @@
 @implementation Trend
 
 - (NSString *)description {
-    return [NSString stringWithFormat:@"<%@: name=%@; query=%@; url=%@", [self class], self.name, self.query, self.url];
+    //return [NSString stringWithFormat:@"<%@: name=%@; query=%@; url=%@;\ntweets=%@", [self class], self.name, self.query, self.url, self.tweets];
+    return self.name;
 }
 
 

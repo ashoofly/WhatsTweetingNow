@@ -14,5 +14,8 @@
 @property (strong, nonatomic) NSString *countryLocation;
 @property (strong, nonatomic) NSString *localLatitude;
 @property (strong, nonatomic) NSString *localLongitude;
+@property (strong, nonatomic) NSArray *localTweets;
+@property (strong, nonatomic) NSArray *countryTweets;
+@property (strong, nonatomic) NSArray *globalTweets;
 
 @end

@@ -7,9 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+@class Trend;
 
-@interface SearchViewController : TWTRTimelineViewController
+@interface TrendDetailViewController : TWTRTimelineViewController
 
-@property (strong, nonatomic) NSString *searchTerm;
+@property (strong, nonatomic) Trend *trend;
 
 @end

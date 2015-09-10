@@ -47,7 +47,7 @@
                 // handle the response data e.g.
                 NSError *jsonError;
                 NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:0 error:&jsonError];
-                NSLog(@"%@", json);
+                //NSLog(@"%@", json);
             }
             else {
                 NSLog(@"Error: %@", connectionError);

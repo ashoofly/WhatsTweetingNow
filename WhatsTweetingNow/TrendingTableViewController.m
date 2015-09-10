@@ -11,7 +11,7 @@
 #import "SMXMLDocument.h"
 #import "Trend.h"
 #import "APIKeys.h"
-#import "SearchViewController.h"
+#import "TrendDetailViewController.h"
 
 typedef NS_ENUM(NSInteger, Geography) {
     LOCAL,
@@ -41,9 +41,20 @@ typedef NS_ENUM(NSInteger, Geography) {
     [self.refreshControl addTarget:self
                             action:@selector(fetchAllTrends)
                   forControlEvents:UIControlEventValueChanged];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(fetchAllTrends)
+                                                 name:@"GotWOEID"
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(fetchAllTweets)
+                                                 name:@"GotTrends"
+                                               object:nil];
+    
     [self getWOEID];
-
-
+    
+    
 }
 
 - (void)reloadData {
@@ -74,7 +85,8 @@ typedef NS_ENUM(NSInteger, Geography) {
              self.localLatitude = [centroid valueWithPath:@"latitude"];
              self.localLongitude = [centroid valueWithPath:@"longitude"];
              
-             [self fetchAllTrends];
+             [[NSNotificationCenter defaultCenter] postNotificationName:@"GotWOEID" object:self];
+            // [self fetchAllTrends];
              
          } else {
              NSLog(@"%@", connectionError);
@@ -86,16 +98,26 @@ typedef NS_ENUM(NSInteger, Geography) {
     [self fetchTrends:self.localWOEID forGeography:LOCAL];
     [self fetchTrends:self.countryWOEID forGeography:COUNTRY];
     [self fetchTrends:GLOBAL_WOEID forGeography:WORLD];
+    
+}
+
+- (void)fetchAllTweets {
+    [self fetchTweets:self.localTrends];
+    [self fetchTweets:self.countryTrends];
+    [self fetchTweets:self.worldTrends];
+    NSLog(@"Reloading table data...");
+    [self reloadData];
 }
 
 
+
+
 - (void)fetchTrends:(NSString *)woeid forGeography:(Geography)geo {
-    NSLog(@"self.localWOEID = %@", self.localWOEID);
     NSString *showTrendsEndpoint = @"https://api.twitter.com/1.1/trends/place.json";
     NSDictionary *params = @{@"id" : woeid}; //Austin
     NSError *clientError;
     NSURLRequest *request = [[[Twitter sharedInstance] APIClient] URLRequestWithMethod:@"GET" URL:showTrendsEndpoint parameters:params error:&clientError];
-    NSLog(@"fetching...");
+    NSLog(@"fetching trends...");
     if (request) {
         [[[Twitter sharedInstance] APIClient] sendTwitterRequest:request completion:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
             if (data) {
@@ -117,13 +139,7 @@ typedef NS_ENUM(NSInteger, Geography) {
                     }
                     if (self.localTrends && self.countryTrends && self.worldTrends) {
                         self.allTrends = @[self.localTrends, self.countryTrends, self.worldTrends];
-                        for (NSArray *trends in self.allTrends) {
-                            for (Trend *t in trends) {
-                                NSLog(@"%@", t.name);
-                            }
-                            NSLog(@"\n");
-                        }
-                        [self reloadData];
+                        [[NSNotificationCenter defaultCenter] postNotificationName:@"GotTrends" object:self];
                     }
 
                 });
@@ -138,6 +154,54 @@ typedef NS_ENUM(NSInteger, Geography) {
     else {
         NSLog(@"Error: %@", clientError);
     }
+}
+
+- (NSArray *)fetchTweets:(NSArray *)trends {
+    
+    NSString *showTweetsEndpoint = @"https://api.twitter.com/1.1/search/tweets.json";
+    NSError *clientError;
+    NSMutableArray *temp = [NSMutableArray array];
+    
+    for (Trend *t in trends) {
+        NSString *query = t.name;
+        NSDictionary *searchParams = [self getSearchParams:query forTrend:trends];
+        
+        NSURLRequest *request = [[[Twitter sharedInstance] APIClient] URLRequestWithMethod:@"GET" URL:showTweetsEndpoint parameters:searchParams error:&clientError];
+        
+        NSLog(@"fetching tweets %@...", request.URL.absoluteString);
+        if (request) {
+            [[[Twitter sharedInstance] APIClient] sendTwitterRequest:request completion:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
+                if (data) {
+                    // handle the response data e.g.
+                    NSError *jsonError;
+                    NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:0 error:&jsonError];
+                    NSArray *tweetsJSON = [json valueForKey:@"statuses"];
+                    //NSLog(@"Tweets found: %@", tweetsJSON);
+                    if (tweetsJSON.count==0) {
+                        NSLog(@"EMPTY RESULTS");
+                        NSLog(@"%@ yielded no results. pulling from trends.", t.name);
+
+                    } else {
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            t.tweets = [TWTRTweet tweetsWithJSONArray:tweetsJSON];
+                            [temp addObject:t];
+                        });
+                    }
+
+                }
+                else {
+                    NSLog(@"Error: %@", connectionError);
+                    [self.refreshControl endRefreshing];
+                    
+                }
+            }];
+        }
+        else {
+            NSLog(@"Error: %@", clientError);
+        }
+    }
+    return temp.copy;
+    
 }
 
 - (NSArray *) parseJSONObject:(NSDictionary *)json {
@@ -158,6 +222,21 @@ typedef NS_ENUM(NSInteger, Geography) {
     return tempTrends.copy;
 }
 
+- (NSDictionary *)getSearchParams:(NSString *)query forTrend:(NSArray *)trends {
+    if (trends == self.localTrends)
+        return @{@"q" : query,
+                 @"geocode" : [NSString stringWithFormat:@"%@,%@,50mi", self.localLatitude, self.localLongitude]};
+    else if (trends == self.countryTrends)
+        return @{@"q" : query,
+                 @"geocode" : [NSString stringWithFormat:@"39.8282,98.5795,1500mi"]};
+    else
+        return @{@"q" : query};
+    
+    /* for country:
+     take center of country, get radius.
+     then check place, country_code to see if it's "US" or whatever. */
+}
+
 #pragma mark - UITableViewDataSource
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -165,13 +244,13 @@ typedef NS_ENUM(NSInteger, Geography) {
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    if (section==0) {
-        return @"Austin";
+    if (section==LOCAL) {
+        return self.localLocation;
     }
-    else if (section==1) {
-        return @"U.S.";
+    else if (section==COUNTRY) {
+        return self.countryLocation;
     }
-    else if (section==2) {
+    else if (section==WORLD) {
         return @"World";
     }
     return @"Nothing";
@@ -184,57 +263,52 @@ typedef NS_ENUM(NSInteger, Geography) {
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Trend Cell" forIndexPath:indexPath];
     cell.textLabel.text = ((Trend *)[[self.allTrends objectAtIndex:indexPath.section] objectAtIndex:indexPath.row]).name;
-    NSLog(@"%@", cell.textLabel.text);
     return cell;
 }
 
 
 - (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"twitter://"]]) {
-        NSLog(@"opening native twitter app");
-        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"twitter://search?q=Apple%20near%3AAustin%20within%3A100mi&src=typd"]];
-        
-    } else {
-        NSLog(@"No native twitter app");
-        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://twitter.com/search?q=Apple%20near%3AAustin%20within%3A100mi&src=typd"]];
-        
-    }
+//    if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"twitter://"]]) {
+//        NSLog(@"opening native twitter app");
+//        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"twitter://search?q=Apple%20near%3AAustin%20within%3A100mi&src=typd"]];
+//        
+//    } else {
+//        NSLog(@"No native twitter app");
+//        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://twitter.com/search?q=Apple%20near%3AAustin%20within%3A100mi&src=typd"]];
+//        
+//    }
 }
 
-- (void)prepareSearchViewController:(SearchViewController *)search withTerm:(NSString *)keyword
+
+
+- (void)prepareSearchViewController:(TrendDetailViewController *)search withTerm:(NSString *)keyword
 {
     
 }
 
+
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    
-    if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"twitter://"]]) {
-        NSLog(@"opening native twitter app");
-        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"twitter://search?query=Apple%20near%3AAustin%20within%3A100mi&src=typd"]];
 
-    } else {
-        NSLog(@"No native twitter app");
-        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://twitter.com/search?q=Apple%20near%3AAustin%20within%3A100mi&src=typd"]];
-
+    if ([sender isKindOfClass:[UITableViewCell class]]) {
+        NSIndexPath *indexPath = [self.tableView indexPathForCell:sender];
+        TrendDetailViewController *dest = [segue destinationViewController];
+        if (indexPath.section==LOCAL)
+            dest.trend = [self.localTrends objectAtIndex:indexPath.row];
+        else if (indexPath.section==COUNTRY)
+            dest.trend = [self.countryTrends objectAtIndex:indexPath.row];
+        else if (indexPath.section==WORLD)
+            dest.trend = [self.worldTrends objectAtIndex:indexPath.row];
     }
-
-//    if ([sender isKindOfClass:[UITableViewCell class]]) {
-//        NSIndexPath *indexPath = [self.tableView indexPathForCell:sender];
-//        SearchViewController *dest = [segue destinationViewController];
-//        NSString *query = ((UITableViewCell *)sender).textLabel.text;
-//        if (indexPath.section==0)
-//            dest.searchTerm = [NSString stringWithFormat:@"%@ near:%@ within:100mi", query, self.localLocation];
-//        else if (indexPath.section==1)
-//            dest.searchTerm = [NSString stringWithFormat:@"%@ near:%@", query, self.countryLocation];
-//        else
-//            dest.searchTerm = query;
-//    }
     
     
     
     // Get the new view controller using [segue destinationViewController].
     // Pass the selected object to the new view controller.
+}
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 @end

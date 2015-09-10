@@ -59,6 +59,9 @@
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="7id-ev-6G7" id="6Tx-F4-7nX">
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
+                                <connections>
+                                    <segue destination="I0X-Sq-d6K" kind="show" identifier="tweets" id="isV-pG-zpa"/>
+                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <connections>
@@ -73,7 +76,25 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Z5F-x3-BWe" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1703" y="322"/>
+            <point key="canvasLocation" x="1607" y="313"/>
+        </scene>
+        <!--Trend Detail View Controller-->
+        <scene sceneID="wvp-BG-5kw">
+            <objects>
+                <viewController id="I0X-Sq-d6K" customClass="TrendDetailViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="fCW-0s-ddi"/>
+                        <viewControllerLayoutGuide type="bottom" id="jhT-UI-kJH"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="f23-8h-QGH">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="PIN-Hz-sip" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2318" y="313"/>
         </scene>
         <!--Location View Controller-->
         <scene sceneID="UjE-Ws-P7r">

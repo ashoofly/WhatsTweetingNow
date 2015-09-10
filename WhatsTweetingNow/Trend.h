@@ -14,5 +14,6 @@
 @property (strong, nonatomic) NSString *promoted_content;
 @property (strong, nonatomic) NSString *query;
 @property (strong, nonatomic) NSString *url;
+@property (strong, nonatomic) NSArray *tweets;
 
 @end

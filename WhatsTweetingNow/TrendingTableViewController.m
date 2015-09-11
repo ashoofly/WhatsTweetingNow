@@ -48,7 +48,7 @@ typedef NS_ENUM(NSInteger, Geography) {
                                                object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(fetchAllTweets)
+                                             selector:@selector(reloadData)
                                                  name:@"GotTrends"
                                                object:nil];
     
@@ -58,12 +58,14 @@ typedef NS_ENUM(NSInteger, Geography) {
 }
 
 - (void)reloadData {
+    NSLog(@"Trends fetched. Reloading data.");
     [self.tableView reloadData];
     [self.refreshControl endRefreshing];
 }
 
 
 - (void)getWOEID {
+    NSLog(@"Getting woeid");
     self.localLocation = @"Austin";
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://where.yahooapis.com/v1/places.q('%@')?appid=%@", self.localLocation, YahooAPIKey]];
     NSURLRequest *request = [NSURLRequest requestWithURL:url];
@@ -81,7 +83,7 @@ typedef NS_ENUM(NSInteger, Geography) {
              SMXMLElement *centroid = [place childNamed:@"centroid"];
              self.localWOEID = [place valueWithPath:@"woeid"];
              self.countryWOEID =[country attributeNamed:@"woeid"];
-             self.countryLocation = [place valueWithPath:@"country"];
+             self.countryLocation = [place valueWithPath:@"country_code"];
              self.localLatitude = [centroid valueWithPath:@"latitude"];
              self.localLongitude = [centroid valueWithPath:@"longitude"];
              
@@ -95,22 +97,12 @@ typedef NS_ENUM(NSInteger, Geography) {
     
 }
 - (void)fetchAllTrends {
+    NSLog(@"Received notification. Fetching all trends...");
     [self fetchTrends:self.localWOEID forGeography:LOCAL];
     [self fetchTrends:self.countryWOEID forGeography:COUNTRY];
     [self fetchTrends:GLOBAL_WOEID forGeography:WORLD];
     
 }
-
-- (void)fetchAllTweets {
-    [self fetchTweets:self.localTrends];
-    [self fetchTweets:self.countryTrends];
-    [self fetchTweets:self.worldTrends];
-    NSLog(@"Reloading table data...");
-    [self reloadData];
-}
-
-
-
 
 - (void)fetchTrends:(NSString *)woeid forGeography:(Geography)geo {
     NSString *showTrendsEndpoint = @"https://api.twitter.com/1.1/trends/place.json";
@@ -156,54 +148,6 @@ typedef NS_ENUM(NSInteger, Geography) {
     }
 }
 
-- (NSArray *)fetchTweets:(NSArray *)trends {
-    
-    NSString *showTweetsEndpoint = @"https://api.twitter.com/1.1/search/tweets.json";
-    NSError *clientError;
-    NSMutableArray *temp = [NSMutableArray array];
-    
-    for (Trend *t in trends) {
-        NSString *query = t.name;
-        NSDictionary *searchParams = [self getSearchParams:query forTrend:trends];
-        
-        NSURLRequest *request = [[[Twitter sharedInstance] APIClient] URLRequestWithMethod:@"GET" URL:showTweetsEndpoint parameters:searchParams error:&clientError];
-        
-        NSLog(@"fetching tweets %@...", request.URL.absoluteString);
-        if (request) {
-            [[[Twitter sharedInstance] APIClient] sendTwitterRequest:request completion:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
-                if (data) {
-                    // handle the response data e.g.
-                    NSError *jsonError;
-                    NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:0 error:&jsonError];
-                    NSArray *tweetsJSON = [json valueForKey:@"statuses"];
-                    //NSLog(@"Tweets found: %@", tweetsJSON);
-                    if (tweetsJSON.count==0) {
-                        NSLog(@"EMPTY RESULTS");
-                        NSLog(@"%@ yielded no results. pulling from trends.", t.name);
-
-                    } else {
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            t.tweets = [TWTRTweet tweetsWithJSONArray:tweetsJSON];
-                            [temp addObject:t];
-                        });
-                    }
-
-                }
-                else {
-                    NSLog(@"Error: %@", connectionError);
-                    [self.refreshControl endRefreshing];
-                    
-                }
-            }];
-        }
-        else {
-            NSLog(@"Error: %@", clientError);
-        }
-    }
-    return temp.copy;
-    
-}
-
 - (NSArray *) parseJSONObject:(NSDictionary *)json {
     NSArray *jsonTrends = [json objectForKey:@"trends"];
     
@@ -220,21 +164,6 @@ typedef NS_ENUM(NSInteger, Geography) {
         [tempTrends addObject:trend];
     }
     return tempTrends.copy;
-}
-
-- (NSDictionary *)getSearchParams:(NSString *)query forTrend:(NSArray *)trends {
-    if (trends == self.localTrends)
-        return @{@"q" : query,
-                 @"geocode" : [NSString stringWithFormat:@"%@,%@,50mi", self.localLatitude, self.localLongitude]};
-    else if (trends == self.countryTrends)
-        return @{@"q" : query,
-                 @"geocode" : [NSString stringWithFormat:@"39.8282,98.5795,1500mi"]};
-    else
-        return @{@"q" : query};
-    
-    /* for country:
-     take center of country, get radius.
-     then check place, country_code to see if it's "US" or whatever. */
 }
 
 #pragma mark - UITableViewDataSource
@@ -293,12 +222,23 @@ typedef NS_ENUM(NSInteger, Geography) {
     if ([sender isKindOfClass:[UITableViewCell class]]) {
         NSIndexPath *indexPath = [self.tableView indexPathForCell:sender];
         TrendDetailViewController *dest = [segue destinationViewController];
-        if (indexPath.section==LOCAL)
-            dest.trend = [self.localTrends objectAtIndex:indexPath.row];
-        else if (indexPath.section==COUNTRY)
-            dest.trend = [self.countryTrends objectAtIndex:indexPath.row];
-        else if (indexPath.section==WORLD)
-            dest.trend = [self.worldTrends objectAtIndex:indexPath.row];
+        dest.query = ((UITableViewCell *)sender).textLabel.text;
+        
+        if (indexPath.section==LOCAL) {
+            dest.centerLocation = [NSString stringWithFormat:@"%@,%@", self.localLatitude, self.localLongitude];
+            dest.locationName = self.localLocation;
+            dest.radius = 50;
+        }
+        else if (indexPath.section==COUNTRY) {
+            dest.centerLocation = [NSString stringWithFormat:@"39.8282,98.5795"];
+            dest.locationName = self.countryLocation;
+            dest.radius = 1500;
+        }
+        else if (indexPath.section==WORLD) {
+            dest.centerLocation = @"GLOBAL";
+            dest.locationName = @"GLOBAL";
+            dest.radius = -1;
+        }
     }
     
     

@@ -47,9 +47,11 @@
     
     if (self.radius != -1) {
         return @{@"q" : self.query,
-                 @"geocode" : [NSString stringWithFormat:@"%@,%dmi", self.centerLocation, self.radius]};
+                 @"geocode" : [NSString stringWithFormat:@"%@,%dmi", self.centerLocation, self.radius],
+                 @"count" : @"100"};
     } else {
-        return @{@"q" : self.query};
+        return @{@"q" : self.query,
+                 @"count": @"100"};
     }
     
         /* for country:

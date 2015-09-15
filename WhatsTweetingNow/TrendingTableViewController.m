@@ -83,7 +83,7 @@ typedef NS_ENUM(NSInteger, Geography) {
              SMXMLElement *centroid = [place childNamed:@"centroid"];
              self.localWOEID = [place valueWithPath:@"woeid"];
              self.countryWOEID =[country attributeNamed:@"woeid"];
-             self.countryLocation = [place valueWithPath:@"country_code"];
+             self.countryLocation = [country attributeNamed:@"code"];
              self.localLatitude = [centroid valueWithPath:@"latitude"];
              self.localLongitude = [centroid valueWithPath:@"longitude"];
              

@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		A28A06ED1B9F822C00751000 /* LocationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A28A06EC1B9F822C00751000 /* LocationViewController.m */; };
 		A28A06F11BA0874100751000 /* TrendDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A28A06F01BA0874100751000 /* TrendDetailViewController.m */; };
+		A2BAA21F1BA72FB20029438F /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2BAA21E1BA72FB20029438F /* CoreLocation.framework */; };
 		A2E17DE51B99FD9200962213 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = A2E17DE41B99FD9200962213 /* main.m */; };
 		A2E17DE81B99FD9200962213 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A2E17DE71B99FD9200962213 /* AppDelegate.m */; };
 		A2E17DEB1B99FD9200962213 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A2E17DEA1B99FD9200962213 /* LoginViewController.m */; };
@@ -42,6 +43,7 @@
 		A28A06EE1BA0829600751000 /* APIKeys.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = APIKeys.h; sourceTree = "<group>"; };
 		A28A06EF1BA0874100751000 /* TrendDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrendDetailViewController.h; sourceTree = "<group>"; };
 		A28A06F01BA0874100751000 /* TrendDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TrendDetailViewController.m; sourceTree = "<group>"; };
+		A2BAA21E1BA72FB20029438F /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		A2E17DDF1B99FD9200962213 /* WhatsTweetingNow.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WhatsTweetingNow.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A2E17DE31B99FD9200962213 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A2E17DE41B99FD9200962213 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -73,6 +75,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A2BAA21F1BA72FB20029438F /* CoreLocation.framework in Frameworks */,
 				A2E17E0D1B99FE4000962213 /* Fabric.framework in Frameworks */,
 				A2E17E101B99FE4000962213 /* TwitterCore.framework in Frameworks */,
 				A2E17E0E1B99FE4000962213 /* TwitterKit.framework in Frameworks */,
@@ -92,6 +95,7 @@
 		A2E17DD61B99FD9200962213 = {
 			isa = PBXGroup;
 			children = (
+				A2BAA21E1BA72FB20029438F /* CoreLocation.framework */,
 				A2E17E091B99FE4000962213 /* Fabric.framework */,
 				A2E17E0A1B99FE4000962213 /* TwitterKit.framework */,
 				A2E17E0B1B99FE4000962213 /* TwitterKitResources.bundle */,

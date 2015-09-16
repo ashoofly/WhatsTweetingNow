@@ -12,6 +12,9 @@
 
 @interface LocationViewController () <UITextFieldDelegate, CLLocationManagerDelegate>
 @property (strong, nonatomic) IBOutlet UITextField *textField;
+@property (strong, nonatomic) IBOutlet UIButton *useGPS;
+@property (strong, nonatomic) IBOutlet UIButton *goButton;
+
 @property (strong, nonatomic) CLLocationManager *locationManager;
 @property (assign, nonatomic) CLLocationDegrees latitude;
 @property (assign, nonatomic) CLLocationDegrees longitude;
@@ -22,6 +25,13 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    
+    
+    }
+
+
+- (IBAction)findMyLocation:(id)sender {
+    
     if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusNotDetermined) {
         [self.locationManager requestWhenInUseAuthorization];
     }
@@ -29,13 +39,10 @@
         ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusAuthorizedWhenInUse ||
          [CLLocationManager authorizationStatus] == kCLAuthorizationStatusAuthorizedAlways) {
             [self monitorLocationChanges];
-    }
+        }
     
-    
-    
-  
-    // Do any additional setup after loading the view.
 }
+
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -65,28 +72,26 @@
     self.longitude = location.coordinate.longitude;
     NSLog(@"Latitude: %f. Longitude: %f.", self.latitude, self.longitude);
     [self.locationManager stopUpdatingLocation];
+    [self performSegueWithIdentifier:@"ListTweets" sender:self];
 }
 
-- (void)viewWillDisappear:(BOOL)animated {
-    NSLog(@"View disappearing. Location timestamp: %@", self.locationManager.location.timestamp);
-}
 
-- (void)viewDidDisappear:(BOOL)animated {
-    [super viewDidDisappear:animated];
-    NSLog(@"stopping monitoring right after view disappears...");
-    [self.locationManager stopUpdatingLocation];
-}
 
 #pragma mark - Navigation
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    TrendingTableViewController *dest = [segue destinationViewController];
-    dest.localLocation = self.textField.text;
+    if (sender == self) {
+        
     
- 
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+        TrendingTableViewController *dest = [segue destinationViewController];
+        dest.localLatitude = [NSString stringWithFormat:@"%f", self.latitude];
+        dest.localLongitude = [NSString stringWithFormat:@"%f", self.longitude];
+        
+    } else if (sender == self.goButton) {
+        TrendingTableViewController *dest = [segue destinationViewController];
+        dest.localLocation = self.textField.text.capitalizedString;
+    }
 }
 
 

@@ -28,35 +28,6 @@
     }];
     logInButton.center = self.view.center;
     [self.view addSubview:logInButton];
-    //[self testRequest];
-    //[self getWOEID];
-}
-
-
-- (void)testRequest {
-    //NSString *statusesShowEndpoint = @"https://api.twitter.com/1.1/statuses/show.json";
-    NSString *showTrendsEndpoint = @"https://api.twitter.com/1.1/trends/place.json";
-    NSDictionary *params = @{@"id" : @"2357536"};
-    NSError *clientError;
-    
-    NSURLRequest *request = [[[Twitter sharedInstance] APIClient] URLRequestWithMethod:@"GET" URL:showTrendsEndpoint parameters:params error:&clientError];
-    
-    if (request) {
-        [[[Twitter sharedInstance] APIClient] sendTwitterRequest:request completion:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
-            if (data) {
-                // handle the response data e.g.
-                NSError *jsonError;
-                NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:0 error:&jsonError];
-                //NSLog(@"%@", json);
-            }
-            else {
-                NSLog(@"Error: %@", connectionError);
-            }
-        }];
-    }
-    else {
-        NSLog(@"Error: %@", clientError);
-    }
 }
 
 - (void)didReceiveMemoryWarning {

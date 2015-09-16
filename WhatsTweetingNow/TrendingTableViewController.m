@@ -52,8 +52,10 @@ typedef NS_ENUM(NSInteger, Geography) {
                                                  name:@"GotTrends"
                                                object:nil];
     
-    [self getWOEID];
-    
+    if (self.localLatitude && self.localLongitude)
+        [self getWOEIDFromCoordinates];
+    else if (self.localLocation)
+        [self getWOEIDsFromName:self.localLocation];
     
 }
 
@@ -63,10 +65,33 @@ typedef NS_ENUM(NSInteger, Geography) {
     [self.refreshControl endRefreshing];
 }
 
+# pragma mark - API Calls
 
-- (void)getWOEID {
-    NSLog(@"Getting woeid");
-    self.localLocation = @"Austin";
+- (void)getWOEIDFromCoordinates {
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"https://query.yahooapis.com/v1/public/yql?q=select%%20*%%20from%%20geo.placefinder%%20where%%20text%%3D%%22%@%%2C%@%%22%%20and%%20gflags%%3D%%22R%%22&diagnostics=true&format=xml", self.localLatitude, self.localLongitude]];
+    NSURLRequest *request = [NSURLRequest requestWithURL:url];
+    [NSURLConnection sendAsynchronousRequest:request
+                                       queue:[NSOperationQueue mainQueue]
+                           completionHandler:^(NSURLResponse *response,
+                                               NSData *data, NSError *connectionError)
+     {
+         if (data.length > 0 && connectionError == nil)
+         {
+             NSError *error;
+             SMXMLDocument *things = [SMXMLDocument documentWithData:data error:&error];
+             SMXMLElement *resultList = [things childNamed:@"results"];
+             NSArray *results = [resultList childrenNamed:@"Result"];
+             SMXMLElement *chosenResult = [results firstObject];
+             self.localLocation = [chosenResult valueWithPath:@"city"];
+             [self getWOEIDsFromName:self.localLocation];
+         } else {
+             NSLog(@"%@", connectionError);
+         }
+     }];
+
+}
+
+- (void)getWOEIDsFromName:(NSString *)string {
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://where.yahooapis.com/v1/places.q('%@')?appid=%@", self.localLocation, YahooAPIKey]];
     NSURLRequest *request = [NSURLRequest requestWithURL:url];
     [NSURLConnection sendAsynchronousRequest:request
@@ -77,21 +102,31 @@ typedef NS_ENUM(NSInteger, Geography) {
          if (data.length > 0 && connectionError == nil)
          {
              NSError *error;
+             
              SMXMLDocument *places = [SMXMLDocument documentWithData:data error:&error];
+             if (error) {
+                 [self raiseAlert:[NSString stringWithFormat:@"'%@' not found", self.localLocation] mesage:@"Please try another location."];
+                 return;
+             }
              SMXMLElement *place = [[places childrenNamed:@"place"] firstObject];
              SMXMLElement *country = [[place childrenNamed:@"country"] firstObject];
              SMXMLElement *centroid = [place childNamed:@"centroid"];
              self.localWOEID = [place valueWithPath:@"woeid"];
              self.countryWOEID =[country attributeNamed:@"woeid"];
              self.countryLocation = [country attributeNamed:@"code"];
-             self.localLatitude = [centroid valueWithPath:@"latitude"];
-             self.localLongitude = [centroid valueWithPath:@"longitude"];
-             
+             if (!self.localLatitude && !self.localLongitude) {
+                 self.localLatitude = [centroid valueWithPath:@"latitude"];
+                 self.localLongitude = [centroid valueWithPath:@"longitude"];
+             }
+             if (!place || !country || !centroid) {
+                 [self raiseAlert:[NSString stringWithFormat:@"'%@' not found", self.localLocation] mesage:@"Please try another location."];
+                 return;
+             }
              [[NSNotificationCenter defaultCenter] postNotificationName:@"GotWOEID" object:self];
-            // [self fetchAllTrends];
              
          } else {
              NSLog(@"%@", connectionError);
+                 [self raiseAlert:@"Problem with connection" mesage:@"Please try again."];
          }
      }];
     
@@ -106,10 +141,10 @@ typedef NS_ENUM(NSInteger, Geography) {
 
 - (void)fetchTrends:(NSString *)woeid forGeography:(Geography)geo {
     NSString *showTrendsEndpoint = @"https://api.twitter.com/1.1/trends/place.json";
-    NSDictionary *params = @{@"id" : woeid}; //Austin
+    NSDictionary *params = @{@"id" : woeid};
     NSError *clientError;
     NSURLRequest *request = [[[Twitter sharedInstance] APIClient] URLRequestWithMethod:@"GET" URL:showTrendsEndpoint parameters:params error:&clientError];
-    NSLog(@"fetching trends...");
+    NSLog(@"fetching trends... %@", request.URL.absoluteString);
     if (request) {
         [[[Twitter sharedInstance] APIClient] sendTwitterRequest:request completion:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
             if (data) {
@@ -117,16 +152,19 @@ typedef NS_ENUM(NSInteger, Geography) {
                 NSError *jsonError;
                 NSArray *json = [NSJSONSerialization JSONObjectWithData:data options:0 error:&jsonError];
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    //NSLog(@"%@", [self parseJSONObject:json.firstObject]);
                     switch (geo) {
                         case LOCAL:
                             self.localTrends = [self parseJSONObject:json.firstObject];
+                            NSLog(@"self.localTrends = %@", self.localTrends);
                             break;
                         case COUNTRY:
                             self.countryTrends = [self parseJSONObject:json.firstObject];
+                            NSLog(@"self.countryTrends = %@", self.localTrends);
                             break;
                         case WORLD:
                             self.worldTrends = [self parseJSONObject:json.firstObject];
+                            NSLog(@"self.worldTrends = %@", self.localTrends);
+
                             break;
                     }
                     if (self.localTrends && self.countryTrends && self.worldTrends) {
@@ -139,32 +177,18 @@ typedef NS_ENUM(NSInteger, Geography) {
             else {
                 NSLog(@"Error: %@", connectionError);
                 [self.refreshControl endRefreshing];
+                [self raiseAlert:[NSString stringWithFormat:@"No trends found for '%@'", self.localLocation] mesage:@"Please try another location."];
 
             }
         }];
     }
     else {
         NSLog(@"Error: %@", clientError);
+        [self raiseAlert:@"Problem connecting with Twitter" mesage:@"Please try again."];
     }
 }
 
-- (NSArray *) parseJSONObject:(NSDictionary *)json {
-    NSArray *jsonTrends = [json objectForKey:@"trends"];
-    
-    NSMutableArray *tempTrends = [[NSMutableArray alloc] init];
-    for (NSDictionary *t in jsonTrends) {
-        Trend *trend = [[Trend alloc] init];
-        
-        for (NSString *key in t) {
-            if ([trend respondsToSelector:NSSelectorFromString(key)]) {
-                [trend setValue:[t valueForKey:key] forKey:key];
-            }
-        }
-        
-        [tempTrends addObject:trend];
-    }
-    return tempTrends.copy;
-}
+
 
 #pragma mark - UITableViewDataSource
 
@@ -196,29 +220,9 @@ typedef NS_ENUM(NSInteger, Geography) {
 }
 
 
-- (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-//    if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"twitter://"]]) {
-//        NSLog(@"opening native twitter app");
-//        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"twitter://search?q=Apple%20near%3AAustin%20within%3A100mi&src=typd"]];
-//        
-//    } else {
-//        NSLog(@"No native twitter app");
-//        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://twitter.com/search?q=Apple%20near%3AAustin%20within%3A100mi&src=typd"]];
-//        
-//    }
-}
-
-
-
-- (void)prepareSearchViewController:(TrendDetailViewController *)search withTerm:(NSString *)keyword
-{
-    
-}
-
+#pragma mark - Navigation
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-
     if ([sender isKindOfClass:[UITableViewCell class]]) {
         NSIndexPath *indexPath = [self.tableView indexPathForCell:sender];
         TrendDetailViewController *dest = [segue destinationViewController];
@@ -240,12 +244,35 @@ typedef NS_ENUM(NSInteger, Geography) {
             dest.radius = -1;
         }
     }
-    
-    
-    
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
 }
+
+# pragma mark - Utility methods
+
+- (NSArray *) parseJSONObject:(NSDictionary *)json {
+    NSArray *jsonTrends = [json objectForKey:@"trends"];
+    
+    NSMutableArray *tempTrends = [[NSMutableArray alloc] init];
+    for (NSDictionary *t in jsonTrends) {
+        Trend *trend = [[Trend alloc] init];
+        
+        for (NSString *key in t) {
+            if ([trend respondsToSelector:NSSelectorFromString(key)]) {
+                [trend setValue:[t valueForKey:key] forKey:key];
+            }
+        }
+        
+        [tempTrends addObject:trend];
+    }
+    return tempTrends.copy;
+}
+
+- (void)raiseAlert:(NSString *)title mesage:(NSString *)msg {
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:title message:msg preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *defaultAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {}];
+    [alert addAction:defaultAction];
+    [self presentViewController:alert animated:YES completion:nil];
+}
+
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];

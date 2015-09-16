@@ -123,6 +123,8 @@
 				A2E17DE71B99FD9200962213 /* AppDelegate.m */,
 				A28A06EB1B9F822C00751000 /* LocationViewController.h */,
 				A28A06EC1B9F822C00751000 /* LocationViewController.m */,
+				A2E17DE91B99FD9200962213 /* LoginViewController.h */,
+				A2E17DEA1B99FD9200962213 /* LoginViewController.m */,
 				A2E17DEC1B99FD9200962213 /* Main.storyboard */,
 				A28A06EF1BA0874100751000 /* TrendDetailViewController.h */,
 				A28A06F01BA0874100751000 /* TrendDetailViewController.m */,
@@ -143,8 +145,6 @@
 				A2E17E181B9A435F00962213 /* SMXMLDocument.podspec */,
 				A2E17DEF1B99FD9200962213 /* Images.xcassets */,
 				A2E17DF11B99FD9200962213 /* LaunchScreen.xib */,
-				A2E17DE91B99FD9200962213 /* LoginViewController.h */,
-				A2E17DEA1B99FD9200962213 /* LoginViewController.m */,
 				A2E17DE31B99FD9200962213 /* Info.plist */,
 				A2E17DE41B99FD9200962213 /* main.m */,
 			);
